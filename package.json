@@ -1,0 +1,25 @@
+{
+  "name": "framejs",
+  "version": "1.0.0",
+  "description": "Real-time image manipulation and delivery for your site, in Javascript",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jskopek/framejs.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jskopek/framejs/issues"
+  },
+  "homepage": "https://github.com/jskopek/framejs#readme",
+  "dependencies": {
+    "express": "^4.15.4"
+  },
+  "devDependencies": {
+    "supervisor": "^0.12.0"
+  }
+}
