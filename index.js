@@ -4,11 +4,15 @@ const imageServer = require('./imageServer');
 const express = require('express');
 const app = express();
 
-app.use(imageServer.server({
-    imageSourcePath: path.join(__dirname, 'images'),
-    imageDestPath: path.join(__dirname, 'dest'),
-    storageHandler: imageServer.StorageHandlerNoStorage
+app.use('/uncached/', imageServer.uncachedServer({
+    sourcePath: path.join(__dirname, 'images'),
 }));
+
+app.use('/cached/', imageServer.cachedServer({
+    sourcePath: path.join(__dirname, 'images'),
+    cachedPath: path.join(__dirname, 'cache'),
+}));
+
 
 
 app.listen(3000, function() {
