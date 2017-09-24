@@ -1,6 +1,6 @@
 const path = require('path');
 const Jimp = require('jimp');
-//const fs = require('fs');
+const _ = require('underscore');
 
 
 var uncachedServer = function(serverOptions) {
@@ -40,12 +40,18 @@ var cachedServer = function(serverOptions) {
     let sourcePath = serverOptions.sourcePath;
     let cachedPath = serverOptions.cachedPath;
 
-    let getCached = function(imagePath, imageParams, callback) {
+    let getCached = function(imageName, imageParams, callback) {
+        var imageParamsStr = _.map(_.pairs(imageParams), (pair) => pair.join('-')).join('--'); // param1-val1--param2-val2
+        var imageNameComponents = imageName.split('.');
+        imageNameComponents.splice(-1, 0, imageParamsStr); // insert imageParamsStr before last . component
+        var cachedImageName = imageNameComponents.join('.');
+        console.log(cachedImageName);
         console.log('getCached', imageParams);
         callback(undefined);
     }
 
-    let getUncached = function(imagePath, callback) {
+    let getUncached = function(imageName, callback) {
+        var imagePath = path.join(sourcePath, imageName);
         console.log('getUncached', imagePath);
         Jimp.read(imagePath, function(err, image) {
             if(!image) { callback(false); }
@@ -67,15 +73,14 @@ var cachedServer = function(serverOptions) {
         };
 
         var imageName = req.path.split('/').pop(); // get the full url (e.g. /1.jpg) and pop the last component
-        var imagePath = path.join(sourcePath, imageName);
 
-        getCached(imagePath, imageParams, function(image) {
+        getCached(imageName, imageParams, function(image) {
             if(image) {
                 res.writeHead(200, {'Content-Type': 'image/jpg'});
                 res.end(image, 'binary');
                 next();
             } else {
-                getUncached(imagePath, function(image) {
+                getUncached(imageName, function(image) {
                     if(!image) {
                         res.sendStatus();
                         return next();
